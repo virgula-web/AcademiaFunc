@@ -1,0 +1,2 @@
+curl -d '{"nome":"James Kirk","email":"jakirk@gmail.com","tipo":"aluno"}' -X POST -H "Content-Type:application/json" localhost:5000/incluir/Pessoa
+

@@ -1,4 +1,5 @@
 
+import json
 from config import *
 
 #Preciso de uma tabela ralacional entre os alunos e personais, para poder relação entre alunos e personais
@@ -55,7 +56,10 @@ class Personal(Pessoa):
     def __str__(self):
         return super().__str__() + f', Tem {self.quantidade_alunos} de Alunos '
 
-
+    def json(self):
+        json2 = super().json()
+        json2.update({"quantidade_alunos":self.quantidade_alunos})
+        return json2
 
 class Treino(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -68,6 +72,20 @@ class Treino(db.Model):
     def __str__(self):
         return f' Treino : {self.tipo}, Series: {self.series}'
 
+    def json(self):
+        temp =  {
+            "id": self.id,
+            "series": self.series,
+            "tipo": self.tipo,
+            "exercicios": self.tipo
+        }
+        alunos = []
+        for s in self.alunos:
+            alunos.append(s.json())
+        temp.update({"alunos":alunos})
+        return temp
+
+
 
 class Aluno(Pessoa):
     id = db.Column(db.Integer,db.ForeignKey('pessoa.id'),primary_key =True)
@@ -79,25 +97,35 @@ class Aluno(Pessoa):
     trei_id = db.Column(db.Integer, db.ForeignKey(Treino.id), 
                           nullable=False)
 
-
     def __str__(self):
         return super().__str__() + f', Ativo={self.ativo}, {self.treino} '
 
+    def json(self):
+        json3 = super().json()
+        json3.update({"ativo":self.ativo})
+        json3.update({"valor_mensalidade":self.valor_mensalidade})
+        json3.update({"trei_id":self.trei_id})
+        return json3
 
 
 class Exercicio(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     nome = db.Column(db.String(254))
     maquina = db.Column(db.String(254))
-    
-
     exer_id = db.Column(db.Integer, db.ForeignKey(Treino.id), 
                           nullable=False)
     
     def __str__(self) -> str:
         return f"nome = {self.nome}, na maquina: {self.maquina},{self.treino}"
 
-
+    
+    def json(self):
+        return {
+            "id": self.id,
+            "nome": self.nome,
+            "maquina": self.maquina,
+            "exer_id": self.exer_id
+        }
 
 """
 
