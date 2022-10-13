@@ -1,6 +1,6 @@
-
 import json
 from config import *
+
 
 #Preciso de uma tabela ralacional entre os alunos e personais, para poder relação entre alunos e personais
 #TENTEI USAR LISTA REVERSA COMO USEI NO TREINO PARA ALUNO ,POREM DAR UM ERRO
@@ -90,7 +90,7 @@ class Treino(db.Model):
 class Aluno(Pessoa):
     id = db.Column(db.Integer,db.ForeignKey('pessoa.id'),primary_key =True)
     __mapper_args__= {
-        'polymorphic_identity': 'alunos',
+        'polymorphic_identity': 'aluno',
     }
     ativo = db.Column(db.Boolean)
     valor_mensalidade = db.Column(db.String(254))
@@ -127,70 +127,71 @@ class Exercicio(db.Model):
             "exer_id": self.exer_id
         }
 
-"""
+
 
 #teste
 
-if os.path.exists(arquivobd):
-    os.remove(arquivobd)
+if __name__=="__main__":
 
-db.create_all()
+    if os.path.exists(arquivobd):
+        os.remove(arquivobd)
 
-#Teste Professor
-caio = Professor(nome="Caio Luan Zenke", 
-            email="caiozdbja@gmail.com", salario=7)
+    db.create_all()
 
-print(f'Professor: {caio}\n')
+    #Teste Professor
+    caio = Professor(nome="Caio Luan Zenke", 
+                email="caiozdbja@gmail.com", salario=7)
 
-db.session.add(caio)
-db.session.commit()
+    print(f'Professor: {caio}\n')
 
-
-#teste Personal
-zenke = Personal(nome= 'Jorgao', email='ajbncsabcai@',quantidade_alunos ='30')
-print(f'Personal: {zenke}\n')
-db.session.add(zenke)
-db.session.commit()
+    db.session.add(caio)
+    db.session.commit()
 
 
-#Teste Treino 
-t1 = Treino(series='4x10',tipo='perna_inicante')
-
-db.session.add(t1)
-db.session.commit()
-
-#Teste Aluno
-jose = Aluno(nome='José Augusto', email='joséaugusto@gmail.com' , ativo =True,treino= t1)
-print(f'Aluno: {jose}\n' )
-db.session.add(jose)
-db.session.commit()
+    #teste Personal
+    zenke = Personal(nome= 'Jorgao', email='ajbncsabcai@',quantidade_alunos ='30')
+    print(f'Personal: {zenke}\n')
+    db.session.add(zenke)
+    db.session.commit()
 
 
+    #Teste Treino 
+    t1 = Treino(series='4x10',tipo='perna_inicante')
 
-print ('Retornando Todas As Pessoas:')
-for p in db.session.query(Pessoa).all():
-    print (f'\t{p}')
+    db.session.add(t1)
+    db.session.commit()
 
-print()
-
-    for a in zenke.personais:
-        print(f'Busca dos Alunos do Personal {zenke.nome}:\n\t{a}')
+    #Teste Aluno
+    jose = Aluno(nome='José Augusto', email='joséaugusto@gmail.com' , ativo =True,treino= t1)
+    print(f'Aluno: {jose}\n' )
+    db.session.add(jose)
+    db.session.commit()
 
 
 
+    print ('Retornando Todas As Pessoas:')
+    for p in db.session.query(Pessoa).all():
+        print (f'\t{p}')
 
-#exercicios
+    print()
+    #for a in zenke.personais:
+    #        print(f'Busca dos Alunos do Personal {zenke.nome}:\n\t{a}')
 
-ex = Exercicio(nome='Agachamento No Smith', maquina = 'Polia Smith' ,treino= t1 )
-ex2 = Exercicio(nome='Afundo Bulgaro', maquina = 'Livre' ,treino= t1 )
 
 
-db.session.add(ex)
-db.session.add(ex2)
-db.session.commit()
 
-print ('Retornando Todas os Exercicios de um Treino:')
-for t in t1.exercicios:
-    print(f'\t{t}')
+    #exercicios
 
-"""
+    ex = Exercicio(nome='Agachamento No Smith', maquina = 'Polia Smith' ,treino= t1 )
+    ex2 = Exercicio(nome='Afundo Bulgaro', maquina = 'Livre' ,treino= t1 )
+
+
+    db.session.add(ex)
+    db.session.add(ex2)
+    db.session.commit()
+
+    print ('Retornando Todas os Exercicios de um Treino:')
+    for t in t1.exercicios:
+        print(f'\t{t}')
+
+
