@@ -1,6 +1,7 @@
 from modelo import *
 from rota_listar import *
 from rota_incluir import *
+from flask_ipban import IpBan
 
 @app.route("/")
 def inicio():
